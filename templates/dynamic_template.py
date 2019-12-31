@@ -84,6 +84,94 @@ NO_REWARD = 0
 # Template - Insert your code here
 ###############################################################################
 
+import random
+count1 = 0
+count2 = 0
+
+def addition (is_target_choices, target_allocations, anti_target_allocations):
+    global count1
+    global count2
+    length = len(is_target_choices)
+    output = (0, 0)
+    counter = 0
+    counter_target_true = 0
+    counter_target_false = 0
+    counter_anti_target_true = 0
+    counter_anti_target_false = 0
+    for idx in range(length):
+        if is_target_choices[idx] == 1:
+            counter += 1
+    for idx_target in range(len(target_allocations)):
+        if target_allocations[idx_target] == 1:
+            counter_target_true += 1
+        else:
+            counter_target_false += 1
+
+    for idx_anti in range(len(anti_target_allocations)):
+        if anti_target_allocations[idx_anti] == 1:
+            counter_anti_target_true += 1
+        else:
+            counter_anti_target_false += 1
+
+    if counter < 2:
+        output = (1, 0)
+        return output
+    elif count1 < 9:
+        rand = int(random.uniform(0, 2))
+        count1 += 1
+        output = (rand, 0)
+        return output
+    elif count2 < 12:
+        rand = int(random.uniform(0, 3))
+        if rand == 2:
+            rand = 0
+        count2 += 1
+        output = (rand, 0)
+        return output
+
+    elif count2 == 12:
+        counter_last_8 = 0
+        rand = int(random.uniform(0, 2))
+        count2 += 1
+        for idx_last_8 in range(length-8, length):
+            if is_target_choices[idx_last_8] == 1:
+                counter_last_8 += 1
+        if counter_last_8 > 3:
+            count2 = 8
+        output = (rand, 0)
+        return output
+
+    elif is_target_choices[length - 1] == 0:
+        rand = int(random.uniform(0, 3))
+        if rand == 2:
+            rand = -1
+        count1 = rand + 7
+        count2 = 8
+        output = (1, 0)
+        return output
+
+    elif counter_anti_target_true > 24 and counter_target_true > 24:
+        output = (0, 0)
+        return output
+
+    elif counter_target_true > 24 and counter_anti_target_false > 74:
+        output = (0, 1)
+        return output
+    elif counter_target_false > 74 and counter_anti_target_true > 24:
+        output = (1,0)
+        return output
+    elif counter_target_false > 74 and counter_anti_target_false > 74:
+        output = (1, 1)
+        return output
+    else:
+	    output = (0, 1)
+        return output
+
+if __name__ == '__main__':
+    #const:
+   # is_target_choices = (1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+    addition(is_target_choices, target_allocations, anti_target_allocations)
+
 
 def allocate(target_allocations, anti_target_allocations, is_target_choices):
     """
